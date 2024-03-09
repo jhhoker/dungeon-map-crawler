@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dungeon Crawler | Master</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <section class="tools-section">
+            
+            <div class="screen-tools">
+                <label class="tittle">Screen Tools</label>
+                <hr>
+                <ul class="tools btn">
+                    <label class="map-button" for="map_input">
+                        <input type="file" id="map_input">
+                        <img src="icons/map.svg" alt="">
+                        <span>Import Map</span>
+                    </label>
+                    <li>
+                        <img src="icons/fill-bucket.svg" alt="">
+                        <span>Fill Screen</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="drawing-tools">
+                <label class="tittle">Drawing Tools</label>
+                <hr>
+                <ul class="tools unit">
+                    <li id="eraser">
+                        <img src="icons/eraser.svg">
+                        <span>Eraser</span>
+                    </li>
+                </ul>
+
+                <ul class="tools config">
+                    <li>
+                        <label>Size</label>
+                        <input type="range" class="tool slider">
+                    </li>
+                    <li>
+                        <label>Hardness</label>
+                        <input type="range" class="tool slider">
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="map-container"></section>
+    </div>
+</body>
+</html>
