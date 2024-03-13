@@ -1,21 +1,12 @@
 class Tools {
     constructor(canvas) {
         this.canvas = canvas
-        this.drawCtx = canvas.getContext("2d");
-        
-        Object.defineProperty(this, 'size', {
-            configurable: false,
-            value: 10,     
-        });
-
-        Object.defineProperty(this, 'hardness', {
-            configurable: false,
-            value: 20,
-        });
+        this.drawCtx = canvas.getContext("2d")
+        this.size = 50
+        this.hardness = 50
 
         Object.defineProperty(this, 'colorHolder', {
             writable: true,
-            value: "erase",
             configurable: false,
             enumerable: false
         })
@@ -32,23 +23,25 @@ class Tools {
                 if(color !== 'erase') {
                     this.drawCtx.globalCompositeOperation = "source-over";
                     this.drawCtx.fillStyle = color 
+                    this.colorHolder = color;
                 } else {
                     this.drawCtx.globalCompositeOperation = "destination-out";
-                    this.drawCtx.fillStyle = 'rgba(0, 0, 0)';
+                    this.drawCtx.fillStyle = 'black';
+                    this.colorHolder = 'black';
                 }
-
-                this.colorHolder = color;
             }
         });
     }
 
     draw(e) {
+        let {size, hardness} = this.setupTools()
         let {x, y} = this.getMousePosition(e)
+        this.setHardness(hardness)
 
         this.drawCtx.save()
 
         this.drawCtx.beginPath()
-        this.drawCtx.arc(x, y, this.size, 0, Math.PI * 2)
+        this.drawCtx.arc(x, y, size, 0, Math.PI * 2)
         this.drawCtx.closePath()
         this.drawCtx.fill()
         
@@ -65,6 +58,21 @@ class Tools {
         this.color = this.colorHolder
     }
 
+    setupTools() {
+        let { size, hardness } = this
+        hardness /= 50
+
+        hardness = size * hardness 
+        size = size - hardness
+        
+        return { size, hardness }
+    }
+
+    setHardness(hardness) {
+        this.drawCtx.shadowColor = this.color
+        this.drawCtx.shadowBlur = hardness
+    }
+
     getMousePosition(e) {
         return {
             x: e.offsetX,
@@ -77,6 +85,7 @@ const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
 const tools = new Tools(canvas);
+tools.color = 'black'
 
 const mapInput = document.querySelector("#map_input");
 const mapContainer = document.querySelector(".map-container");
@@ -85,12 +94,21 @@ mapInput.addEventListener("input", renderMap);
 window.addEventListener("resize", setCanvasDimensions);
 
 const toolButtons = document.querySelectorAll(".tool-btn");
+const toolUnits = document.querySelectorAll(".tool-unit");
+const toolConfigSlider = document.querySelectorAll(".tool.slider");
+
+let selectedTool = document.querySelector(".selected").id;
+
 const acceptedActions = {
     removeMap: function() {
         mapContainer.innerHTML = "";
     },
     fillScreen: function() {
-        tools.fillCanvas()
+        tools.fillCanvas();
+    },
+    erase: function(e) {
+        tools.color = "erase";
+        tools.draw(e);
     }
 };
 
@@ -100,13 +118,31 @@ toolButtons.forEach(button => {
         action();
     })
 })
+toolUnits.forEach(unit => {
+    unit.addEventListener("click", () => {
+        document.querySelector(".selected").classList.remove("selected")
+        unit.classList.add("selected")
+
+        selectedTool = unit.id
+    })
+})
+
+toolConfigSlider.forEach(slider => {
+    slider.addEventListener('input', e => {
+        tools[slider.id] = slider.value
+        let {size, hardness} = tools.setupTools()
+
+        console.log(size + hardness)
+    })
+})
 
 // Drawing events
 let isDrawing = false;
 canvas.addEventListener("mousedown", ()=> { isDrawing = true })
 canvas.addEventListener("mousemove", e => { 
     if(isDrawing) { 
-        tools.draw(e);
+        let action = acceptedActions[selectedTool];
+        action(e);
     } 
 });
 canvas.addEventListener("mouseup", () => { isDrawing = false })
@@ -145,5 +181,5 @@ function renderMap(e) {
         reader.readAsDataURL(file);
     };
 
-    this.value = null;
+    mapInput.value = null;
 }

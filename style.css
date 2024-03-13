@@ -180,6 +180,6 @@ section {
     display: none;
 }
 
-.active {
-    background-color: #ccc;
+.selected {
+    border-bottom: 1px inset #ddd;
 }
