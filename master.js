@@ -3,7 +3,7 @@ class Tools {
         this.canvas = canvas
         this.drawCtx = canvas.getContext("2d")
         this.size = 50
-        this.hardness = 50
+        this.hardness = 25
 
         Object.defineProperty(this, 'colorHolder', {
             writable: true,
@@ -60,7 +60,7 @@ class Tools {
 
     setupTools() {
         let { size, hardness } = this
-        hardness /= 50
+        hardness /= 100
 
         hardness = size * hardness 
         size = size - hardness
@@ -79,23 +79,31 @@ class Tools {
             y: e.offsetY
         }
     }
+
+    setCanvasDimensions() {
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+    }
 }
 
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
 const tools = new Tools(canvas);
-tools.color = 'black'
 
 const mapInput = document.querySelector("#map_input");
 const mapContainer = document.querySelector(".map-container");
 
 mapInput.addEventListener("input", renderMap);
-window.addEventListener("resize", setCanvasDimensions);
+window.addEventListener("resize", () => {
+    tools.setCanvasDimensions();
+    tools.fillCanvas()
+});
 
 const toolButtons = document.querySelectorAll(".tool-btn");
 const toolUnits = document.querySelectorAll(".tool-unit");
 const toolConfigSlider = document.querySelectorAll(".tool.slider");
+const sliderDisplay = document.querySelectorAll(".slider-value")
 
 let selectedTool = document.querySelector(".selected").id;
 
@@ -127,12 +135,26 @@ toolUnits.forEach(unit => {
     })
 })
 
+const valueTreatments = {
+    size: (value) => {
+        value = +value / 2;
+        return value .toString() + 'px';
+    },
+    hardness: (value) => {
+        value = +value * 2;
+        return value.toString() + '%';
+    }
+}
+
 toolConfigSlider.forEach(slider => {
     slider.addEventListener('input', e => {
-        tools[slider.id] = slider.value
-        let {size, hardness} = tools.setupTools()
+        tools[slider.id] = slider.value;
 
-        console.log(size + hardness)
+        const display = document.querySelector(`.${slider.id}`);
+        const value = valueTreatments[slider.id](slider.value);
+        console.log(value)
+
+        display.innerHTML = value
     })
 })
 
@@ -147,14 +169,6 @@ canvas.addEventListener("mousemove", e => {
 });
 canvas.addEventListener("mouseup", () => { isDrawing = false })
 canvas.addEventListener("mouseout", () => { isDrawing = false })
-
-
-function setCanvasDimensions() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-
-    tools.fillCanvas()
-}
 
 function renderMap(e) {
     const inputTarget = e.target;
@@ -175,7 +189,8 @@ function renderMap(e) {
             mapContainer.appendChild(img); 
             mapContainer.appendChild(canvas);
             
-            setCanvasDimensions();
+            tools.setCanvasDimensions();
+            tools.fillCanvas();
         });
 
         reader.readAsDataURL(file);
