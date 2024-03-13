@@ -14,13 +14,17 @@
             <div class="screen-tools">
                 <label class="tittle">Screen Tools</label>
                 <hr>
-                <ul class="tools btn">
+                <ul class="tools">
                     <label class="map-button" for="map_input">
                         <input type="file" id="map_input">
                         <span class="material-symbols-rounded">image</span>
                         <span>Import Map</span>
                     </label>
-                    <li>
+                    <li class="tool-btn rmv-map" id="removeMap">
+                        <span class="material-symbols-rounded">delete</span>
+                        <span>Remove Map</span>
+                    </li>
+                    <li class="tool-btn" id="fillScreen">
                         <span class="material-symbols-rounded">colors</span>
                         <span>Fill Screen</span>
                     </li>
@@ -30,8 +34,8 @@
             <div class="drawing-tools">
                 <label class="tittle">Drawing Tools</label>
                 <hr>
-                <ul class="tools unit">
-                    <li id="eraser">
+                <ul class="tools">
+                    <li class="tool-unit" id="eraser">
                         <span class="material-symbols-rounded">ink_eraser</span>
                         <span>Eraser</span>
                     </li>
