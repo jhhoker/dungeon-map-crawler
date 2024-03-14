@@ -1,7 +1,7 @@
 export class Tools {
     constructor(canvas) {
         this.canvas = canvas
-        this.drawCtx = canvas.getContext("2d")
+        this.context = canvas.getContext("2d")
         this.size = 50
         this.hardness = 25
 
@@ -21,12 +21,12 @@ export class Tools {
                 if(typeof color !== 'string') throw new TypeError("Bad value");
                 
                 if(color !== 'erase') {
-                    this.drawCtx.globalCompositeOperation = "source-over";
-                    this.drawCtx.fillStyle = color 
+                    this.context.globalCompositeOperation = "source-over";
+                    this.context.fillStyle = color 
                     this.colorHolder = color;
                 } else {
-                    this.drawCtx.globalCompositeOperation = "destination-out";
-                    this.drawCtx.fillStyle = 'black';
+                    this.context.globalCompositeOperation = "destination-out";
+                    this.context.fillStyle = 'black';
                     this.colorHolder = 'black';
                 }
             }
@@ -38,14 +38,16 @@ export class Tools {
         let {x, y} = this.getMousePosition(e)
         this.setHardness(hardness)
 
-        this.drawCtx.save()
+        this.context.save()
 
-        this.drawCtx.beginPath()
-        this.drawCtx.arc(x, y, size, 0, Math.PI * 2)
-        this.drawCtx.closePath()
-        this.drawCtx.fill()
+        this.context.beginPath()
+        this.context.arc(x, y, size, 0, Math.PI * 2)
+        this.context.closePath()
+        this.context.fill()
         
-        this.drawCtx.restore()
+        this.context.restore()
+
+        console.log('helo')
     }
 
     fillCanvas() {
@@ -53,9 +55,9 @@ export class Tools {
 
         let {width, height} = this.canvas
 
-        this.drawCtx.clearRect(0, 0, width, height)
+        this.context.clearRect(0, 0, width, height)
         this.color = "rgba(0, 0, 0, 0.5)"
-        this.drawCtx.fillRect(0, 0, width, height)
+        this.context.fillRect(0, 0, width, height)
 
         this.color = this.colorHolder
     }
@@ -71,8 +73,8 @@ export class Tools {
     }
 
     setHardness(hardness) {
-        this.drawCtx.shadowColor = this.color
-        this.drawCtx.shadowBlur = hardness
+        this.context.shadowColor = this.color
+        this.context.shadowBlur = hardness
     }
 
     getMousePosition(e) {

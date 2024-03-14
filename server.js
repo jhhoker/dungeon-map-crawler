@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
     res.sendFile(join(__dirname, '/public/index.html'));
 });
 
+app.get('/master', (req, res) => {
+    res.sendFile(join(__dirname, '/public/master.html'));
+});
+
 server.listen(PORT, () => {
     console.log("Running server at: https://localhost:" + PORT)
 })
