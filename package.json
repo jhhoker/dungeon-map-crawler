@@ -1,0 +1,19 @@
+{
+  "name": "dungeon-map-crawler",
+  "version": "1.0.0",
+  "description": "A map viewer for support DM's in dungeon crawling sessions",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch --no-warnings server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "socket.io": "^4.7.4"
+  }
+}
