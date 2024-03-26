@@ -1,5 +1,6 @@
 import { createServer } from "http";
 import express from "express";
+import { Server } from "socket.io";
 import 'dotenv/config'
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -10,7 +11,9 @@ const __dirname = dirname(__filename);
 const app = express();
 const server = createServer(app);
 
-const PORT = process.env.PORT || 3000
+const io = new Server(server);
+
+const PORT = process.env.PORT || 3000;
 
 app.use('/public', express.static("public"));
 
@@ -24,4 +27,4 @@ app.get('/master', (req, res) => {
 
 server.listen(PORT, () => {
     console.log("Running server at: https://localhost:" + PORT)
-})
+});
